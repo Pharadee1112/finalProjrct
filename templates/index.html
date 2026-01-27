@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stock Predictor</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f6f6f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 50vh;
+        }
+
+        .box {
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .h3 {
+            font-size: 24px;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            margin-top: 10px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 15px 25px;
+            background: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* popup */
+        .popup {
+            position: fixed;
+            inset: 0;
+            background: rgba(76, 75, 75, 0.4);
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h3 class="h3">Stock Predictor</h3>
+
+    <input id="symbol" placeholder="Stock symbol (AAPL)">
+    <input id="date" type="date">
+
+    <button onclick="analyze()">Predict</button>
+</div>
+
+<!-- popup -->
+<div class="popup" id="popup">
+    <div class="popup-content">
+        <h3>Result</h3>
+        <p id="result"></p>
+        <button onclick="closePopup()">Close</button>
+    </div>
+</div>
+
+<script>
+function analyze() {
+    const symbol = document.getElementById("symbol").value;
+    const date = document.getElementById("date").value;
+
+    fetch("/analyze", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: `symbol=${symbol}&date=${date}`
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("result").innerHTML = `
+            <b>${data.symbol}</b><br>
+            Last date: ${data.last_date}<br>
+            Predicted close: <b>${data.predicted_close}</b>
+        `;
+        document.getElementById("popup").style.display = "flex";
+    });
+}
+
+function closePopup() {
+    document.getElementById("popup").style.display = "none";
+}
+</script>
+
+</body>
+</html>
