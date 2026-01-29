@@ -17,7 +17,7 @@ class StockDataCollector:
         self.tv = TvDatafeed()
         self.data = None
 
-    def collect_data(self, symbol, exchange='NASDAQ', n_bars=60, interval=Interval.in_daily):
+    def collect_data(self, symbol, exchange='NASDAQ', n_bars=None, interval=Interval.in_daily):
         self.data = self.tv.get_hist(
             symbol=symbol,
             exchange=exchange,
